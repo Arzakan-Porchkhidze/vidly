@@ -25,7 +25,7 @@ router.post('/', async(req, res) => {
     if (error) return res.status(400).send(error.details[0].message);
 
     try{
-        const genre = Genre.findById(req.body.id);
+        const genre = await Genre.findById(req.body.genreId);
         let movie = new Movie({
             title: req.body.title,
             genre: {
@@ -47,23 +47,24 @@ router.put('/:id', async(req, res) => {
     if (error) return res.status(400).send(error.details[0].message);
     try{
         const genre = await Genre.findById(req.body.genreId);
-        const movie = await Movie.findByIdAndUpdate(req.params.id,
-            { 
-              title: req.body.title,
-              genre: {
-                _id: genre._id,
-                name: genre.name
-              },
-              numberInStock: req.body.numberInStock,
-              dailyRentalRate: req.body.dailyRentalRate
-            }, { new: true });
-        res.send(movie);
-    }
-    catch(genre){
-        return res.status(404).send('Invalid genre.')
+        try{
+            const movie = await Movie.findByIdAndUpdate(req.params.id,
+                { 
+                  title: req.body.title,
+                  genre: {
+                    _id: genre._id,
+                    name: genre.name
+                  },
+                  numberInStock: req.body.numberInStock,
+                  dailyRentalRate: req.body.dailyRentalRate
+                }, { new: true });
+            res.send(movie);
+        }catch{
+            return res.status(404).send('The movie with the given ID was not found.');
+        }
     }catch{
-        return res.status(404).send('The movie with the given ID was not found.');
-    }
+        return res.status(404).send('Invalid genre.')
+    };  
 });
 
 router.delete('/:id', async(req, res) => {
@@ -72,7 +73,7 @@ router.delete('/:id', async(req, res) => {
         res.send(movie);
     }
     catch{
-        return res.status(404).send('The customer with the given ID was not found.');
+        return res.status(404).send('The movie with the given ID was not found.');
     } 
 })
 
