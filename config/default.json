@@ -1,3 +1,4 @@
 {
-    "privateKey": ""
+    "privateKey": "",
+    "db": "mongodb://localhost/vidly"
 }
