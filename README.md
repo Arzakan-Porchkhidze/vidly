@@ -1,1 +1,1 @@
-# vidly is imaginary service for renting out movies
+# Vidly is imaginary service for renting out movies
